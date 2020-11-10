@@ -24,7 +24,8 @@ score() {
 if (this.Visiblity < 0 && this.Visiblity > -1005) {
 score++
 }
+if (this.Visiblity < 0 && this.Visiblity > -50) {
+  pigsnort.play();
 }
-
-
-};
+}
+}

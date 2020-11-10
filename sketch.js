@@ -11,14 +11,21 @@ var bird, slingshot;
 var gameState = "onSling";
 var bg
 var score = 0
+var bird2,bird3,bird4
+var birds=[]
+var birdflying
+var birdselect
+var pigsnort
 function preload() {
-
-
+    birdflying = loadSound("sounds/bird_flying.mp3");
+    birdselect = loadSound("sounds/bird_select.mp3");
+    pigsnort = loadSound("sounds/pig_snort.mp3");
     getBackgroundImg();
 }
 
 function setup(){
     var canvas = createCanvas(1200,400);
+    canvas.position(15,70)
     engine = Engine.create();
     world = engine.world;
 
@@ -42,7 +49,13 @@ function setup(){
     log5 = new Log(870,120,150, -PI/7);
 
     bird = new Bird(200,50);
-
+    bird2 = new Bird(150,50);
+    bird3 = new Bird(100,50);
+    bird4 = new Bird(50,50);
+    birds.push(bird4)
+    birds.push(bird3)
+    birds.push(bird2)
+    birds.push(bird)
     //log6 = new Log(230,180,80, PI/2);
     slingshot = new SlingShot(bird.body,{x:200, y:50});
 }
@@ -72,28 +85,38 @@ function draw(){
 
     bird.display();
     platform.display();
+    bird2.display();
+    bird3.display();
+    bird4.display();
     //log6.display();
     slingshot.display();  
     fill("yellow")
     textSize(30) 
     text("score: "+score, 1050,50) 
+
 }
 
 function mouseDragged(){
     if (gameState!=="launched"){
-        Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
+        Matter.Body.setPosition(birds[birds.length-1].body, {x: mouseX , y: mouseY});
+
     }
 }
 
 
 function mouseReleased(){
     slingshot.fly();
+    birds.pop()
     gameState = "launched";
+    birdflying.play()
 }
 
 function keyPressed(){
-    if(keyCode === 32){
-       // slingshot.attach(bird.body);
+    if(keyCode === 32&&gameState === "launched"){
+        Matter.Body.setPosition(birds[birds.length-1].body,{x:200, y:50})
+       slingshot.attach(birds[birds.length-1].body);
+       gameState = "onSling"
+       birdselect.play()
     }
 }
 
